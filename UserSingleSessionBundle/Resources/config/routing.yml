@@ -1,0 +1,3 @@
+requestum_user_single_session_homepage:
+    path:     /
+    defaults: { _controller: RequestumUserSingleSessionBundle:Default:index }
