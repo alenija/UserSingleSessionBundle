@@ -18,9 +18,4 @@ interface TokenIdManagerInterface
      * @return mixed
      */
     public function get(TokenInterface $token);
-
-    /**
-     * @param TokenInterface $token
-     */
-    public function remove(TokenInterface $token);
 }

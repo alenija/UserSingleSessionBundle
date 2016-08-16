@@ -15,7 +15,7 @@ class TokenValidator
     /**
      * @var string
      */
-    private $tokenAttr = 'instance-id';
+    private $tokenAttr = 'instance-usage-count';
 
     /**
      * @var TokenIdManagerInterface
@@ -37,20 +37,20 @@ class TokenValidator
             return true;
         }
 
-        /** don't have attribute - invalid */
-        if (!$token->hasAttribute($this->tokenAttr)) {
+        if (!$token->hasAttribute($this->tokenAttr))
+        {
             return false;
         }
 
-        $tokenId = $token->getAttribute($this->tokenAttr);
-
         /** instance absent or pushed from storage - protect token */
-        if (!($storedId = $this->tokenIdManager->get($token))) {
+        if (!($storedTokenUsageCount = $this->tokenIdManager->get($token))) {
             $this->protectToken($token);
             return true;
         }
 
-        return $storedId === $tokenId;
+        $currentTokenUsageCount = $token->getAttribute($this->tokenAttr);
+
+        return $storedTokenUsageCount === $currentTokenUsageCount;
     }
 
     public function protectToken(TokenInterface $token)
@@ -66,6 +66,10 @@ class TokenValidator
         return $token instanceof UsernamePasswordToken || $token instanceof RememberMeToken;
     }
 
+    /**
+     * @param TokenInterface $token
+     * @return bool
+     */
     private function isSupports(TokenInterface $token)
     {
         return $token->getUser() instanceof UserInterface;

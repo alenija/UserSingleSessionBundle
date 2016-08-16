@@ -21,7 +21,13 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('requestum_user_single_session');
         $rootNode
             ->children()
-                ->enumNode('storage')->values(array('memcached'))->end()
+                ->enumNode('storage')
+                    ->values(array('entity', 'memcached'))
+                    ->defaultValue('entity')
+                ->end()
+                ->arrayNode('failure_action')
+                    ->prototype('scalar')->end()
+                ->end()
             ->end();
 
         // Here you should define the parameters that are allowed to

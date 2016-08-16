@@ -12,7 +12,7 @@ class MemcachedTokenIdManager implements TokenIdManagerInterface
     /**
      * @var string
      */
-    private $keyPrefix = 'login-instance-id-';
+    private $keyPrefix = 'login-instance-usage-count-';
 
     /**
      * @var \Memcached
@@ -29,13 +29,13 @@ class MemcachedTokenIdManager implements TokenIdManagerInterface
      */
     public function set(TokenInterface $token)
     {
-        $instanceId = $this->memcached->increment($this->generateKey($token->getUser()), 1);
+        $usageCount = $this->memcached->increment($this->generateKey($token->getUser()), 1);
 
-        if ($instanceId >= ((int)floor(PHP_INT_MAX / 2) - 1)) {
-            $instanceId = false;
+        if ($usageCount >= ((int)floor(PHP_INT_MAX / 2) - 1)) {
+            $usageCount = false;
         }
 
-        if (false === $instanceId) {
+        if (false === $usageCount) {
             $this->memcached->set($this->generateKey($token->getUser()), 1);
         }
     }
@@ -47,14 +47,6 @@ class MemcachedTokenIdManager implements TokenIdManagerInterface
     public function get(TokenInterface $token)
     {
         return $this->memcached->get($this->generateKey($token->getUser()));
-    }
-
-    /**
-     * @param TokenInterface $token
-     */
-    public function remove(TokenInterface $token)
-    {
-        $this->memcached->delete($this->generateKey($token->getUser()));
     }
 
     private function generateKey(UserInterface $user)
