@@ -1,0 +1,26 @@
+{
+    "name": "requestum/user-single-session-bundle",
+    "type": "symfony-bundle",
+    "description": "Symfony RequestumUserSingleSessionBundle",
+    "keywords": ["Security"],
+    "authors": [
+        {
+            "name": "Sergey Stavichenko"
+        },
+        {
+            "name": "Yadviha Khoshtaria"
+        },
+        {
+            "name": "Alexey Bychek"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Requestum\\RouterDecorationBundle\\": "" }
+    },
+    "require": {
+        "symfony/routing": "^3.1",
+        "symfony/config": "^3.1",
+        "symfony/security": "^3.1",
+        "symfony/dependency-injection": "^3.1"
+    }
+}
