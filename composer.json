@@ -15,7 +15,7 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Requestum\\RouterDecorationBundle\\": "" }
+        "psr-4": { "Requestum\\UserSingleSessionBundle\\": "" }
     },
     "require": {
         "symfony/routing": "^3.1",
