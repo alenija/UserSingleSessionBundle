@@ -19,6 +19,10 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('requestum_user_single_session');
+        $rootNode
+            ->children()
+                ->enumNode('storage')->values(array('memcached'))->end()
+            ->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for

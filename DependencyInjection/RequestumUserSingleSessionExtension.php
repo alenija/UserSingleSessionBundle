@@ -4,6 +4,7 @@ namespace Requestum\UserSingleSessionBundle\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -22,7 +23,16 @@ class RequestumUserSingleSessionExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        switch ($manager = $config['storage']){
+            case 'memcached':
+                $manager = sprintf('requestum_user_single_session.token_manager.%s', $manager);
+                break;
+        }
+
+        $definition = $container->findDefinition('requestum_user_single_session.validator');
+        $definition->addArgument(new Reference($manager));
+
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

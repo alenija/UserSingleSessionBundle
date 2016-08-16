@@ -1,21 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: sergey
- * Date: 4/17/14
- * Time: 11:57 AM
- */
 
-namespace UserBundle\Security\Listener;
+namespace Requestum\UserSingleSessionBundle\EventListener;
 
 
+use Requestum\UserSingleSessionBundle\Utils\TokenValidator;
+use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use UserBundle\Service\TokenValidator;
-use Symfony\Bundle\FrameworkBundle\Routing\Router;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
-use Symfony\Component\Security\Core\Event\AuthenticationEvent;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
 
 class TokenValidatorListener

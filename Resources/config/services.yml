@@ -1,0 +1,17 @@
+services:
+#    requestum_user_single_session.example:
+#        class: Requestum\UserSingleSessionBundle\Example
+#        arguments: ["@service_id", "plain_value", %parameter%]
+
+    requestum_user_single_session.memcached:
+        class: Memcached
+        calls:
+            - [ addServers, [ %memcached.servers% ]]
+
+    requestum_user_single_session.token_manager.memcached:
+        class: Requestum\UserSingleSessionBundle\Utils\MemcachedTokeIdManager
+        arguments: ["@requestum_user_single_session.memcached"]
+
+    requestum_user_single_session.validator:
+        class: Requestum\UserSingleSessionBundle\Utils\TokenValidator
+        arguments: ["@requestum_user_single_session.token_manager.memcached"]
