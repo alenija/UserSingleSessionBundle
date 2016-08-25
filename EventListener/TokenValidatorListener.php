@@ -3,10 +3,9 @@
 namespace Requestum\UserSingleSessionBundle\EventListener;
 
 
+use Requestum\UserSingleSessionBundle\Utils\TokenValidationFailureHandler\TokenValidationFailureHandlerInterface;
 use Requestum\UserSingleSessionBundle\Utils\TokenValidator;
-use Symfony\Component\Routing\Router;
 use Symfony\Component\Security\Http\Event\InteractiveLoginEvent;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Event\GetResponseEvent;
 use Symfony\Component\HttpKernel\HttpKernelInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorage;
@@ -24,15 +23,21 @@ class TokenValidatorListener
     protected $tokenValidator;
 
     /**
-     * @var Router
+     * @var TokenValidationFailureHandlerInterface
      */
-    protected $router;
+    private $validationFailureHandler;
 
-    public function __construct(TokenStorage $tokenStorage, TokenValidator $tokenValidator, Router $router)
+    /**
+     * TokenValidatorListener constructor.
+     * @param TokenStorage $tokenStorage
+     * @param TokenValidator $tokenValidator
+     * @param TokenValidationFailureHandlerInterface $validationFailureHandler
+     */
+    public function __construct(TokenStorage $tokenStorage, TokenValidator $tokenValidator, TokenValidationFailureHandlerInterface $validationFailureHandler)
     {
         $this->tokenStorage = $tokenStorage;
         $this->tokenValidator = $tokenValidator;
-        $this->router = $router;
+        $this->validationFailureHandler = $validationFailureHandler;
     }
 
     public function onKernelRequest(GetResponseEvent $event)
@@ -42,8 +47,7 @@ class TokenValidatorListener
             $token = $this->tokenStorage->getToken();
 
             if ($token && !$this->tokenValidator->validateToken($token)) {
-                $response = new RedirectResponse($this->router->generate('logout'));
-                $event->setResponse($response);
+                $this->validationFailureHandler->handle($event);
             }
         };
     }
