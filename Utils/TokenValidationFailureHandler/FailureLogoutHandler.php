@@ -29,7 +29,7 @@ class FailureLogoutHandler implements TokenValidationFailureHandlerInterface
      */
     public function handle(GetResponseEvent $event)
     {
-        $response = new RedirectResponse($this->router->generate('logout'));
+        $response = new RedirectResponse('/logout');
         $event->setResponse($response);
     }
 }
